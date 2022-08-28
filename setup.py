@@ -1,6 +1,10 @@
 """
 Install with: python3 setup.py install
 Develop with: python3 setup.py develop
+Make it available on PIP with:
+    python3 setup.py sdist
+    pip3 install twine
+    twine upload dist/*
 """
 from setuptools import find_packages, setup
 

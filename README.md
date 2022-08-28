@@ -1,6 +1,6 @@
 # NetDoc
 
-A Network Documentation plugin for NetBox.
+Am automatic network documentation plugin for NetBox.
 
 ## Installing netbox
 
