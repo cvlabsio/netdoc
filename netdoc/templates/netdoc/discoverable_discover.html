@@ -1,0 +1,17 @@
+{% extends 'base/layout.html' %}
+{% load helpers %}
+{% load form_helpers %}
+
+{% block title %}Discover {{ object|meta:"verbose_name" }}?{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+  <div class="modal" tabindex="-1" style="display: block; position: static">
+    <div class="modal-dialog">
+      <div class="modal-content" >
+        {% include 'netdoc/htmx/discover_form.html' %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

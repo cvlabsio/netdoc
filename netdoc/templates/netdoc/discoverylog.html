@@ -1,0 +1,102 @@
+{% extends 'generic/object.html' %}
+{% load render_table from django_tables2 %}
+{% load buttons %}
+{% load custom_links %}
+{% load helpers %}
+{% load perms %}
+{% load plugins %}
+{% load netdoc_buttons %}
+
+
+{% block controls %}
+  {# Clone/Edit/Delete Buttons #}
+  <div class="controls">
+    <div class="control-group">
+      {% plugin_buttons object %}
+
+      {# Extra buttons #}
+      {% block extra_controls %}{% endblock %}
+
+      {% if request.user|can_delete:object %}
+        {% delete_button object %}
+      {% endif %}
+
+    </div>
+    <div class="control-group">
+      {% custom_links object %}
+    </div>
+  </div>
+{% endblock controls %}
+
+{% block content %}
+  <div class="row mb-3">
+    <div class="col col-md-6">
+      <div class="card">
+        <h5 class="card-header">Discovery log</h5>
+        <div class="card-body">
+          <table class="table table-hover attr-table">
+            <tr>
+              <th scope="row">Created at</th>
+              <td>{{ object.created }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Discoverable</th>
+              <td>{{ object.discoverable }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Request (template parser)</th>
+              <td>{{ object.request }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Command</th>
+              <td>{{ object.command }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Contains configuration?</th>
+              <td>{{ object.configuration }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Command executed successfully?</th>
+              <td>{{ object.success }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Command output parsed successfully?</th>
+              <td>{{ object.parsed }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Parsed output ingested successfully?</th>
+              <td>{{ object.ingested }}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      {% include 'inc/panels/custom_fields.html' %}
+    </div>
+    <div class="col col-md-6">
+      {% include 'inc/panels/tags.html' %}
+      {% include 'inc/panels/comments.html' %}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col col-md-12">
+      <div class="card">
+        <h5 class="card-header">Raw output</h5>
+        <div class="card-body table-responsive">
+          <pre>{{ object.raw_output }}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% if object.parsed %}
+    <div class="row mt-3">
+      <div class="col col-md-12">
+        <div class="card">
+          <h5 class="card-header">Parsed output</h5>
+          <div class="card-body table-responsive">
+            <pre>{{ object.parsed_output|pprint }}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock content %}
