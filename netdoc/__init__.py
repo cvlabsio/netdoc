@@ -8,7 +8,7 @@ class NetdocConfig(PluginConfig):
     name = 'netdoc'
     verbose_name = 'NetDoc'
     description = 'Automatic Network Documentation plugin for NetBox'
-    version = '0.9.1'
+    version = '0.9.2'
     author = 'Andrea Dainese'
     author_email = 'andrea.dainese@pm.me'
     base_url = 'netdoc'

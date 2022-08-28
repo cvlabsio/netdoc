@@ -1,0 +1,5 @@
+recursive-include netdoc/static *
+recursive-include netdoc/templates *
+recursive-include netdoc/templatetags *
+recursive-include netdoc/api *
+prune netdoc/api/__pycache__

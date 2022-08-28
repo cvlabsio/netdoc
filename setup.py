@@ -10,7 +10,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='netdoc',
-    version='0.9.1',
+    version='0.9.2',
     description='Network Documentation plugin for NetBox',
     url='https://github.com/dainok/netdoc',
     author='Andrea Dainese',
@@ -25,4 +25,7 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3 :: Only',
     ],
+    project_urls={
+        'Source': 'https://github.com/dainok/netdoc',
+    },
 )
