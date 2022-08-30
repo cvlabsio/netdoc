@@ -28,7 +28,7 @@ def ingest(log, force=False):
         if vrf_name == log.request:
             vrf_name = None
         device_o = log.discoverable.device
-        interface_name = item['interface']
+        interface_name = item['intf']
         site_o = device_o.site
         create_args = {
             'name': interface_name,
@@ -43,14 +43,10 @@ def ingest(log, force=False):
         interface_o = functions.set_get_interface(label=interface_name, device=device_o, create_kwargs=create_args, update_kwargs=update_args)
 
         # List all IP addresses
-        addresses = [
-            ipaddress.IPv4Interface(f'{item["primary_ip_address"]}/{item["primary_ip_subnet"].split("/")[1]}')
-        ]
-        addresses_text = [
-            str(ipaddress.IPv4Interface(f'{item["primary_ip_address"]}/{item["primary_ip_subnet"].split("/")[1]}'))
-        ]
-        for index, ipaddr in enumerate(item["secondary_ip_address"]):
-            addresses.append(ipaddress.IPv4Interface(f'{ipaddr}/{item["secondary_ip_subnet"][index].split("/")[1]}'))
+        addresses = []
+        addresses_text = []
+        for index, ipaddr in enumerate(item["ipaddr"]):
+            addresses.append(ipaddress.IPv4Interface(f'{ipaddr}/{item["mask"][index]}'))
             addresses_text.append(str(ipaddress.IPv4Interface(f'{ipaddr}/{item["mask"][index]}')))
 
         # Removing removed addresses
