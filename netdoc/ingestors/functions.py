@@ -6,6 +6,7 @@ from os.path import basename
 from OuiLookup import OuiLookup
 from slugify import slugify
 from django.contrib.contenttypes.models import ContentType
+from netbox.settings import VERSION
 from dcim.models import Device, DeviceType, DeviceRole, Manufacturer, Site, Platform, Interface, Cable, CablePath
 from ipam.models import VRF, IPAddress, Prefix, VLAN
 from netdoc.models import Discoverable, ArpTableEntry, MacAddressTableEntry, RouteTableEntry
@@ -74,42 +75,52 @@ def set_get_cable(left, right):
     # TODO: 1 if the interface is connected should skip
     # TODO: 2 if delete interface get some CablePathDoesNotExists
 
+    """
+    from dcim.models import Interface, Cable, CableTermination, CablePath
+
+    c = Cable.objects.create()
+    int_a = Interface.objects.get(device=1, id=3)
+    int_b = Interface.objects.get(device=6, id=32)
+    cbt1 = CableTermination.objects.create(termination = int_a, cable=c, cable_end="A")
+    cbt2 = CableTermination.objects.create(termination = int_b, cable=c, cable_end="B")
+
+    # Cable.objects.filter(terminations__interface=int_a).filter(terminations__interface=int_b).first()
+
+
+    """
+
+
     interface_type = model_get_or_none('ContentType', model='interface')
-
     left_interface_o, right_interface_o = normalize_l2neighborship(left, right)
-    lookup_kwargs = {
-        'termination_a_id': left_interface_o.pk,
-        'termination_b_id': right_interface_o.pk,
-    }
-    create_kwargs = {
-        'termination_a_type': interface_type,
-        'termination_b_type': interface_type,
-    }
 
-    cable_o=None
-    try:
-        cable_o = model_get_or_create(model_name='Cable', lookup_kwargs=lookup_kwargs, **create_kwargs)
-    except IntegrityError:
-        logging.error(f'Multiple neighbors on {left_interface_o} or {right_interface_o}')
-        cable_o = None
+    if VERSION.startswith('3.3.'):
+        from dcim.models import CableTermination
+        try:
+            cable_o = Cable.objects.filter(terminations__interface=left_interface_o).get(terminations__interface=right_interface_o)
+        except Cable.DoesNotExist:
+            # Cable not found
+            cable_o = Cable.objects.create()
+            t1 = CableTermination.objects.create(termination = left_interface_o, cable=cable_o, cable_end='A')
+            t2 = CableTermination.objects.create(termination = right_interface_o, cable=cable_o, cable_end='B')
 
-    if cable_o:
-        # Create CablePath
-        lookup_cablepath_a_kwargs = {
-            'origin_id': left_interface_o.pk,
-            'destination_id': right_interface_o.pk,
-        }
-        lookup_cablepath_b_kwargs = {
-            'origin_id': right_interface_o.pk,
-            'destination_id': left_interface_o.pk,
-        }
-        create_cablepath_kwargs = {
-            'path': [cable_o],
-            'origin_type': interface_type,
-            'destination_type': interface_type
-        }
-        cable_path_a_o = model_get_or_create(model_name='CablePath', lookup_kwargs=lookup_cablepath_a_kwargs, **create_cablepath_kwargs)
-        cable_path_b_o = model_get_or_create(model_name='CablePath', lookup_kwargs=lookup_cablepath_b_kwargs, **create_cablepath_kwargs)
+            # Create CablePath
+            cable_o._terminations_modified = True
+            cable_o.full_clean()
+            cable_o.save()
+        except IntegrityError:
+            logging.error(f'Multiple neighbors on {left_interface_o} or {right_interface_o}')
+            cable_o = None
+    elif VERSION.startswith('3.2.'):
+        try:
+            cable_o = model_get_or_create(model_name='Cable', lookup_kwargs=lookup_kwargs, **create_kwargs)
+
+            # Create CablePath
+            cable_o._terminations_modified = True
+            cable_o.full_clean()
+            cable_o.save()
+        except IntegrityError:
+            logging.error(f'Multiple neighbors on {left_interface_o} or {right_interface_o}')
+            cable_o = None
 
     return cable_o
 
