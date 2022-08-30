@@ -10,7 +10,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='netdoc',
-    version='0.9.3',
+    version='0.9.4',
     description='Network Documentation plugin for NetBox',
     url='https://github.com/dainok/netdoc',
     author='Andrea Dainese',
