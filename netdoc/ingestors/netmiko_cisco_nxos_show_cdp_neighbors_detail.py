@@ -28,8 +28,8 @@ def ingest(log, force=False):
         discoverable_o = log.discoverable
         interface_name = item['local_port']
         remote_interface_name = item['remote_port']
-        remote_address = item['management_ip']
-        remote_device_name = item['destination_host']
+        remote_address = item['mgmt_ip']
+        remote_device_name = item['dest_host']
         site = log.discoverable.site
 
         # Excluding non physical interfaces

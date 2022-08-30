@@ -3,7 +3,7 @@ from django import forms
 
 from dcim.models import Device
 from netbox.forms import NetBoxModelForm, NetBoxModelFilterSetForm, NetBoxModelCSVForm, NetBoxModelBulkEditForm
-from utilities.forms import CSVModelChoiceField, DynamicModelChoiceField, StaticSelect, BOOLEAN_WITH_BLANK_CHOICES
+from utilities.forms import CSVModelChoiceField, DynamicModelChoiceField, StaticSelect, BOOLEAN_WITH_BLANK_CHOICES, add_blank_choice
 from utilities.forms.fields import DynamicModelChoiceField
 from .models import Credential, Discoverable, DiscoveryLog, DiscoveryModeChoices, DiscoveryModeChoices
 from dcim.models import Site
@@ -127,8 +127,10 @@ class DiscoverableBulkEditForm(NetBoxModelBulkEditForm):
         help_text='Assigned credential',
     )
     mode = forms.ChoiceField(
-        choices=DiscoveryModeChoices,
+        choices=add_blank_choice(DiscoveryModeChoices),
         required=False,
+        initial='',
+        widget=StaticSelect(),
         help_text='Discovery mode',
     )
     discoverable = forms.NullBooleanField(

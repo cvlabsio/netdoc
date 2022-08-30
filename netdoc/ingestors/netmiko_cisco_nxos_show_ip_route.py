@@ -23,10 +23,7 @@ def ingest(log, force=False):
     for item in log.parsed_output:
         # Parsing
         # https://github.com/networktocode/ntc-templates/tree/master/tests/cisco_ios/show_ip_arp
-        vrf_name = log.command.split(" vrf ").pop() # The vrf is embedded in the command
-        if vrf_name == log.request:
-            vrf_name = None
-
+        vrf_name = item['vrf']
         device_o = log.discoverable.device
         interface_name = item['nexthop_if']
 

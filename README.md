@@ -1,10 +1,17 @@
 # NetDoc
 
-An automatic network documentation plugin for NetBox.
+NetDoc is an automatic network documentation plugin for NetBox. NetDoc aims to discover a partially known network populating netbox and drawing L2 and L3 diagrams.
+
+NetDoc:
+
+* Discovers, via nornir+netmiko, network devices fetching information (routing, adjacencies, configuration...).
+* Populate netbox (devices, cables, IPAM).
+
+Network diagrams are currently provided by netbox-topology-views plugin. See [my blog post](https://www.adainese.it/blog/2022/08/28/netdoc-automated-network-discovery-and-documentation/ "NetDoc: automated network discovery and documentation") for more information.
 
 ## Installing netbox
 
-You should follow offical documentation, but just in case here is how I install netbox:
+You should follow the offical documentation, but just in case here is how I install netbox:
 
 ~~~
 sudo apt install -y apache2 python3 python3-pip python3-venv python3-dev build-essential libxml2-dev libxslt1-dev libffi-dev libpq-dev libssl-dev zlib1g-dev
@@ -90,7 +97,7 @@ PLUGINS_CONFIG = {
 SECRET_KEY = '01234567890123456789012345678901234567890123456789'
 ~~~
 
-Upgrade and install dependeincies for netbox:
+Upgrade and install dependencies for netbox:
 
 ~~~
 sudo -u netbox echo netdoc >> /opt/netbox/local_requirements.txt

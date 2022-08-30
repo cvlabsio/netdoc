@@ -112,11 +112,19 @@ def set_get_cable(left, right):
             cable_o = None
     elif VERSION.startswith('3.2.'):
         try:
+            lookup_kwargs = {
+                'termination_a_id': left_interface_o.pk,
+                'termination_b_id': right_interface_o.pk,
+            }
+            create_kwargs = {
+                'termination_a_type': interface_type,
+                'termination_b_type': interface_type,
+            }
             cable_o = model_get_or_create(model_name='Cable', lookup_kwargs=lookup_kwargs, **create_kwargs)
 
             # Create CablePath
             cable_o._terminations_modified = True
-            cable_o.full_clean()
+            #cable_o.full_clean()
             cable_o.save()
         except IntegrityError:
             logging.error(f'Multiple neighbors on {left_interface_o} or {right_interface_o}')

@@ -3,7 +3,7 @@ from rest_framework import serializers
 from ipam.api.serializers import NestedPrefixSerializer
 from dcim.api.serializers import NestedDeviceSerializer
 from netbox.api.serializers import NetBoxModelSerializer, WritableNestedSerializer
-from ..models import Credential, Discoverable, DiscoveryLog
+from ..models import Credential, Discoverable, DiscoveryLog, ArpTableEntry, MacAddressTableEntry, RouteTableEntry 
 
 
 #
@@ -36,6 +36,13 @@ class NestedDiscoverableSerializer(WritableNestedSerializer):
 #
 # Regular serializers
 #
+
+class ArpTableEntrySerializer(NetBoxModelSerializer):
+    # Used only for delete
+    class Meta:
+        model = ArpTableEntry
+        fields = '__all__'
+
 
 class CredentialSerializer(NetBoxModelSerializer):
     url = serializers.HyperlinkedIdentityField(
@@ -74,5 +81,19 @@ class DiscoveryLogSerializer(NetBoxModelSerializer):
     class Meta:
         model = DiscoveryLog
         fields = (
-            'id', 'url', 'created_at', 'discoverable', 'configuration', 'parsed_output', 'raw_output', 'request', 'success', 'parsed', 'ingested'
+            'id', 'url', 'discoverable', 'configuration', 'parsed_output', 'raw_output', 'request', 'success', 'parsed', 'ingested'
         )
+
+
+class RouteTableEntrySerializer(NetBoxModelSerializer):
+    # Used only for delete
+    class Meta:
+        model = RouteTableEntry
+        fields = '__all__'
+
+
+class MacAddressTableEntrySerializer(NetBoxModelSerializer):
+    # Used only for delete
+    class Meta:
+        model = MacAddressTableEntry
+        fields = '__all__'

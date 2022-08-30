@@ -28,7 +28,7 @@ def ingest(log, force=False):
         if vrf_name == log.request:
             vrf_name = None
         device_o = log.discoverable.device
-        interface_name = item['intf']
+        interface_name = item['interface']
         site_o = device_o.site
         create_args = {
             'name': interface_name,
